@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta  name="keyword" content="kext,driver,Mac OS X,lion,64ibt">
+	<meta name="description" content="kext,develop,Mac OS X,lion,64ibt">
+	<title>Device Driver for Mac OS X</title>
+<style type="text/css">
+<!--
+body {
+	width:800px;
+	font: normal normal 14px serif;
+}
+h1, h2, h3 {
+	font-family: sans-serif;
+}
+div#header{
+	font: normal bold 50px sans-serif;
+	text-align: center;
+	position: relative;
+	height: 100px;
+	padding-top: 30px;
+}
+div#main {
+	position: relative;
+	padding-bottom:30px;
+}
+div#left {
+	font: normal normal 14px serif;
+	position: absolute;
+	top: 120px;
+	left: 0px;
+	width: 210px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+div#center {
+	position: relative;
+	margin-left: 220px;
+	border-left-width: 1px;
+	border-left-style: dotted;
+	border-left-color: #aaaaaa;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom:30px;
+}
+div#footer {
+	position: relative;
+	font: normal bold 18px sans-serif;
+	text-align: center;
+	height: 100px;
+}
+p.copyHistory {
+	font: normal normal 14px serif;
+	text-align: right;
+}
+p.left-corner{
+	text-indent: 10px;
+}
+div.photo_style {
+	position: relative;
+	float:left;
+	color: #3C3C3C;
+	font-size: 75%;
+	line-height: 1.2;
+	margin: 0 15px 0 0;
+}
+ul {
+	font-family: sans-serif;
+}
+ul li ul {
+	margin: 0 0 0 1em;
+	padding: 0;
+}
+span.caution {
+    color: red;
+    font: normal bold 120%/100% sans-serif;
+}
+-->
+</style>
+</head>
+<body>
+<div id="header">
+Device Driver for Mac OS X
+<p class="copyHistory">ver. 0.9 by inADA</p>
+</div>
+<div id="left">
+<ul compact>
+	<li><a href="section1.html">概要</a>
+	<ul>
+	  <li><a href="section1.html#mac_os_x_kernel">Mac OS Xのカーネル</a></li>
+	  <li><a href="section1.html#device_driver_structure">バイスドライバの構造</a></li>
+	</ul>
+	</li>
+	<li><a href="section2.html">デバイスドライバの試作</a>
+    <ul>
+        <li><a href="section2.html#environment">kextドライバの開発環境</a></li>
+        <li><a href="section2.html#darwinProject">Darwinプロジェクト</a></li>
+        <li><a href="section2.html#xcode">Xcode</a>
+        <ul>
+        <li><a href="section2.html#newProduct">新規プロジェクト</a></li>
+        <li><a href="section2.html#editSource">ソースコード編集</a></li>
+        </ul>
+        </li>
+        <li><a href="section3.html">Info.plist設定</a>
+		<ul>
+			<li><a href="section3.html#IOKitPersonalities">[IOKitPersonalities]</a></li>
+			<li><a href="section3.html#OSBundleLibraries">[OSBundleLibraries]</a></li>
+			<li><a href="section3.html#plistSample">mDriver-Info.plistの例</a></li>
+		</ul>
+        </li>
+        <li><a href="section4.html">動作検証</a></li>
+    </ul>
+	</li>
+</ul>
+</div>
+<div id="center">
+<div>
+<h2>動作検証</h2>
+<p class="left-corner">
+kextドライバを検証するには準備が必要です。
+</p>
+<h3>ルート</h3>
+<div class="photo_style" style="width:310px">
+	<div>
+			<img height="245" width="310" alt="DirectoryUtility" src="images/fig7directory.png">
+	</div>
+	<p>
+		Fig 3. Directory Utility
+	</p>
+</div>
+<p class="left-corner">
+kextドライバはカーネル内で動作します。カーネルに関連する場所を操作するにはルートのアクセス権が必要です。
+</p>
+<p class="left-corner">
+Mac OS Xでは/System/Library/CoreServices/にあるDirectory Utility.app（ディレクトリユーティリティ.app）と言うアプリケーションを利用してルートを有効にします。
+</p>
+<p class="left-corner">
+Directory Utility.appを起動して、Edit（編集）メニューからルートを有効にしてパスワードを設定してください。これにより、Terminalでsuあるいはsudoが利用できます。
+</p>
+<h3>ログ</h3>
+<p class="left-corner">
+kextドライバからsystem.logあるいはkernel.logにデータを出力することにより、その動作状況を知ることができます。mDriver.kextはsystem.logに出力しています。
+</p>
+<p class="left-corner">
+二つのログは/Applications/Utilities/にあるConsole.app（コンソール.app）でモニタできます。また、Terminalで二つのウィンドウを開き、それぞれに以下のように命令しても最新の状況を見ることもできます。なお、それぞれの終了はcontrol + cです。
+</p>
+<pre style="background-color: #FFFFFF;"><code><span style="color: #0000CC;">tail</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">-f</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">-n</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">30</span><span style="color: #000000;">&nbsp;/</span><span style="color: #000000;">var</span><span style="color: #000000;">/</span><span style="color: #000000;">log</span><span style="color: #000000;">/</span><span style="color: #000000;">kernel.log</span><span style="color: #000000;">
+</span><span style="color: #0000CC;">tail</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">-f</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">-n</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">30</span><span style="color: #000000;">&nbsp;/</span><span style="color: #000000;">var</span><span style="color: #000000;">/</span><span style="color: #000000;">log</span><span style="color: #000000;">/</span><span style="color: #000000;">system.log</span><span style="color: #000000;">
+</span></code></pre>
+<h3>シェルスクリプト</h3>
+<p class="left-corner">
+カーネル内での作業は一つ間違えると、システムクラッシュに繋がります。kextドライバのコピーなど同じ命令を繰り返す作業はShell Script（シェルスクリプト）を書くことで、不必要なリスクを避けるようにすると作業効率が上がります。Shell Scriptの書き方や設定方法はUnixの解説などを参考にしてください。
+</p>
+<h3>ownerとpermissionsの変更</h3>
+<p class="left-corner">
+Mac OS X 10.7.xでは、Xcodeで生成したkextドライバは/System/Library/Extensions/にコピーすると、kextドライバのownerとpermissionsは適切な設定に変更されます。
+</p>
+<p class="left-corner">
+しかし、下記のkextloadとkextutilを利用するためには、kextドライバのownerとpermissionsを変更しなくてはなりません。この変更はビルドする時に毎回しますので、Shell Scriptを書くか、XcodeのBuild PhasesにShell Scriptを登録すると良いでしょう。
+</p>
+<p class="left-corner">
+Terminalを使用するShell Scriptでは以下のようになります。
+</p>
+<pre style="background-color: #FFFFFF;"><code><span style="color: #008000;">#!/bin/csh&nbsp;-f
+</span><span style="color: #000000;">
+</span><span style="color: #0000CC;">sudo</span><span style="color: #000000;">&nbsp;/</span><span style="color: #000000;">usr</span><span style="color: #000000;">/</span><span style="color: #000000;">sbin</span><span style="color: #000000;">/</span><span style="color: #0000CC;">chown</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">-R</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">root</span><span style="color: #000000;">:</span><span style="color: #000000;">wheel</span><span style="color: #000000;">&nbsp;</span><span style="color: #0000CC;">$argv</span><span style="color: #000000;">[</span><span style="color: #000000;">1</span><span style="color: #000000;">]
+</span><span style="color: #0000CC;">sudo</span><span style="color: #000000;">&nbsp;</span><span style="color: #0000CC;">find</span><span style="color: #000000;">&nbsp;</span><span style="color: #0000CC;">$argv</span><span style="color: #000000;">[</span><span style="color: #000000;">1</span><span style="color: #000000;">]&nbsp;</span><span style="color: #000000;">-type</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">d</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">-exec</span><span style="color: #000000;">&nbsp;/</span><span style="color: #000000;">bin</span><span style="color: #000000;">/</span><span style="color: #0000CC;">chmod</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">0755</span><span style="color: #000000;">&nbsp;{}&nbsp;\;
+</span><span style="color: #0000CC;">sudo</span><span style="color: #000000;">&nbsp;</span><span style="color: #0000CC;">find</span><span style="color: #000000;">&nbsp;</span><span style="color: #0000CC;">$argv</span><span style="color: #000000;">[</span><span style="color: #000000;">1</span><span style="color: #000000;">]&nbsp;</span><span style="color: #000000;">-type</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">f</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">-exec</span><span style="color: #000000;">&nbsp;/</span><span style="color: #000000;">bin</span><span style="color: #000000;">/</span><span style="color: #0000CC;">chmod</span><span style="color: #000000;">&nbsp;</span><span style="color: #000000;">0644</span><span style="color: #000000;">&nbsp;{}&nbsp;\;
+</span></code></pre><p class="left-corner">
+Xcodeでは[Navigate]メニューから[Reveal in Project Navigator]を選択します。画面の左欄の[mDriver]を選択し、その右に表示される欄から[TARGETS > mDriver]を選択します。さらに右欄から[Build Phases]タブを選択し、右下の[Add Build Phase]ボタンのポップアップ メニューから[Add Run Script]を選択して、上記のスクリプトを元に必要事項を入力してください。
+</p>
+<h3>kextloadとkextutil</h3>
+<p class="left-corner">
+Terminalのツールkextloadとkextutilを使用することにより、kextドライバを検証できます。kextutilはkextドライバのownerとpermissions、Info.plisの設定などを調べます。
+</p>
+<p class="left-corner">
+kextloadはkextドライバを読み込みます。ただし、初期化と終了時に処理される場所が起動時とは異なるため、最終的な動作検証はkextドライバを/System/Library/Extensions/にコピーして再起動することになります。kextlunoadによりkextドライバをアンロードさせることができますが、非同期コールの処理などが原因で完全にはアンロードできない場合があります。
+</p>
+<p class="left-corner">
+それぞれのツールを事項するにはルートのアクセス権が必要です。suまたはsudoによりルートのアクセス権でkextutilにkextドライバを引数として渡してkextドライバが正しく設定されいるかを調べます。次にkextloadにkextドライバを引数として渡して動作検証します。kextドライバが正常にロードされると、system.logに以下の行に似たような項目が表示されます。
+</p>
+<pre>USBF:   120.166 com_inADAinc_driver_mDriverClass[0x2aea400]
+::start - USB Generic Mouse @ 4 (0x120000)</pre>
+<h3>Debug</h3>
+<p class="left-corner">
+コンパイルが通っても正常に動作しない場合には、各関数に以下のコードを書き込むことにより、system.logにIOLogのテキストが出力されます。
+</p>
+<pre>   IOLog("You are here.\n");</pre>
+<p class="left-corner">
+IOLogの書式はprintfと同じで変数を表示することもできます。system.logファイルを調べることによりプログラムがどこまで実行されているかを知ることができます。
+</p>
+<p class="left-corner">
+誤動作の状況が複雑な場合には、GDBデバッガを利用したツーマシン・デバッグの機能もMac OS Xにあります。
+</p>
+<p class="left-corner">
+kextに関する資料はAppleの開発者向けサイトにあります。kextについて検索すると、この記事を書いている時点で81件の資料がヒットしました。その中にはkextに関する基本資料をまとめた<a href="https://developer.apple.com/library/mac/documentation/Darwin/Conceptual/KEXTConcept/">Kernel Extension Programing Topis</a>、kextドライバを64 bit化する場合の資料<a href="https://developer.apple.com/library/mac/#documentation/Darwin/Conceptual/64bitPorting/KernelExtensionsandDrivers/KernelExtensionsandDrivers.html">64-Bit Transition Guide: Kernel Extensions and Drivers</a>などがあります。
+</p>
+</div>
+<div id="footer">
+<p>
+<a href="section1.html">先頭ページ</a>
+</p>
+<p>
+<span>ページ：</span>
+<a href="section1.html">1</a><span>&nbsp;/</span>
+<a href="section2.html">2</a><span>&nbsp;/</span>
+<a href="section3.html">3</a><span>&nbsp;/</span>
+<b>4</b><span>&nbsp;/</span>
+</p>
+</div>
+</div>
+</body>
+</html>

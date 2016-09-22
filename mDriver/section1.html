@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta  name="keyword" content="kext,driver,Mac OS X,lion,64ibt">
+	<meta name="description" content="kext,develop,Mac OS X,lion,64ibt">
+	<title>Device Driver for Mac OS X</title>
+<style type="text/css">
+<!--
+body {
+	width:800px;
+	font: normal normal 14px serif;
+}
+h1, h2, h3 {
+	font-family: sans-serif;
+}
+div#header{
+	font: normal bold 50px sans-serif;
+	text-align: center;
+	position: relative;
+	height: 100px;
+	padding-top: 30px;
+}
+div#main {
+	position: relative;
+	padding-bottom:30px;
+}
+div#left {
+	font: normal normal 14px serif;
+	position: absolute;
+	top: 120px;
+	left: 0px;
+	width: 210px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+div#center {
+	position: relative;
+	margin-left: 220px;
+	border-left-width: 1px;
+	border-left-style: dotted;
+	border-left-color: #aaaaaa;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom:30px;
+}
+div#footer {
+	position: relative;
+	font: normal bold 18px sans-serif;
+	text-align: center;
+	height: 100px;
+}
+p.copyHistory {
+	font: normal normal 14px serif;
+	text-align: right;
+}
+p.Pcenter{
+	text-indent: 10px;
+}
+div.photo_style {
+	position: relative;
+	float:left;
+	color: #3C3C3C;
+	font-size: 75%;
+	line-height: 1.2;
+	margin: 0 15px 0 0;
+}
+ul {
+	font-family: sans-serif;
+}
+ul li ul {
+	margin: 0 0 0 1em;
+	padding: 0;
+}
+-->
+</style>
+</head>
+<body>
+<div id="header">
+Device Driver for Mac OS X
+<p class="copyHistory">ver. 0.9 by inADA</p>
+</div>
+<div id="left">
+<ul compact>
+	<li><a href="section1.html">概要</a>
+	<ul>
+	  <li><a href="section1.html#mac_os_x_kernel">Mac OS Xのカーネル</a></li>
+	  <li><a href="section1.html#device_driver_structure">バイスドライバの構造</a></li>
+	</ul>
+	</li>
+	<li><a href="section2.html">デバイスドライバの試作</a>
+    <ul>
+        <li><a href="section2.html#environment">kextドライバの開発環境</a></li>
+        <li><a href="section2.html#darwinProject">Darwinプロジェクト</a></li>
+        <li><a href="section2.html#xcode">Xcode</a>
+        <ul>
+        <li><a href="section2.html#newProduct">新規プロジェクト</a></li>
+        <li><a href="section2.html#editSource">ソースコード編集</a></li>
+        </ul>
+        </li>
+        <li><a href="section3.html">Info.plist設定</a>
+		<ul>
+			<li><a href="section3.html#IOKitPersonalities">[IOKitPersonalities]</a></li>
+			<li><a href="section3.html#OSBundleLibraries">[OSBundleLibraries]</a></li>
+			<li><a href="section3.html#plistSample">mDriver-Info.plistの例</a></li>
+		</ul>
+        </li>
+        <li><a href="section4.html">動作検証</a></li>
+    </ul>
+	</li>
+</ul>
+</div>
+<div id="center">
+<div>
+<h1>概要</h1>
+<p class="Pcenter">
+お手持ちのUSBマウスで動作するMac OS X kextデバイスドライバの書き方を紹介します。
+</p>
+<p class="Pcenter">
+Appleは当初からkextドライバを書くことを推薦していません。また、多くの外付け装置がUSBを経由するようになった現在では、独自にkextドライバを書く必要性は低くなっています。ほとんどの場合にはターゲットの装置を他のアプリケーションが横取りしないようにするためのcode-less kextドライバを書き、アプリケーションから制御するだけで十分でしょう。しかし、カーネル内で実際に動作するkextドライバーのソースコードを元に実験してみることは、良い学習になると思います。
+</p>
+<p class="Pcenter">
+この資料ではMac OS Xのカーネル部分の概要を説明し、USBマウスのkextドライバを作る方法を紹介します。
+</p>
+<p class="Pcenter">
+この資料は2003年にPDFとして公開したものを元に、Mac OS X 10.7.xの64bit環境で動作するkextドライバをXcode 4.3で生成できるように改定し、さらに書式をHTMLファイルにしました。iBooks Authorで編集しiBooksで読めるようにしたものも用意しています。
+</p>
+<h2><a name="Mac_OS_X_Kernel">Mac OS Xのカーネル</a></h2>
+<p class="Pcenter">
+Mac OS XではMachカーネルに高速性を目的に改造を加えたカーネルを採用しています。この章ではその概要を紹介します。</p>
+<h3>kextドライバ</h3>
+<div class="photo_style" style="width:223px">
+	<div>
+			<img height="202" width="223" alt="カーネルとIOKit" src="images/fig1darwin.jpg">
+	</div>
+	<p>
+		Fig 1. カーネルとIOKit
+	</p>
+</div>
+<p class="Pcenter">
+Mac OS XではMachカーネルに高速性を目的に改造を加えたカーネルを採用しています。この章ではその概要を紹介します。</p>
+<p class="Pcenter">
+Mac OS Xではカーネル空間とユーザ空間（アプリケーションなどが利用する）が分けられ、相互のやり取りはすべて予め決めた関数や手続きのみで処理されます。 
+</p>
+<p class="Pcenter">
+I/O Kitへの拡張機能として、ハードウェアとのやり取りを行うソフトウェア ドライバをkext(Kernel EXTention)ドライバと呼びます。
+</p>
+<p class="Pcenter">
+また、Mac OS Xではユーザ インタフェースを持たないアプリケーションで、ハードウェアを扱うソフトウェアをドライバと呼ぶ場合もあります。この資料ではこのようなソフトウェアをデーモンと呼ぶことにします。
+</p>
+<h3>64bitカーネル</h3>
+<p class="Pcenter">
+Mac OS X 10.5からカーネルが64bit化しました。デーモンはユーザ空間で起動しますので、64bitカーネルでも引き続き利用できます。しかし、kextドライバはカーネル空間で動作しますので、カーネルと同じ64bitに対応しなくてはならなくなりました。多くのkextドライバはソース コードを変更することなしに、ビルドに必要な64bitの設定に変更して再ビルドするだけで64bitカーネルでも動作します。
+</p>
+<p class="Pcenter">
+実際にここで紹介するUSB Mouseドライバも元にしたソースコードが持っていた問題をわずかに変更し、設定を変更するだけで動作しました。
+</p>
+<p class="Pcenter">
+32bitと64bitそれぞれのkextドライバを別々に用意し、インストーラで選択することは簡単ですが、一つのkextファイルで32bitと64bitの二つのMac OS Xに対応する方法も提供されています。さらにPowerPCとのバイナリ互換を提供するRosettaにも対応する方法も提供されています。興味のある方は以下の資料を参照してください。
+</p>
+<p class="Pcenter">
+<a href="https://developer.apple.com/library/mac/samplecode/SimpleUserClient/Listings/Read_Me_txt.html">SimpleUserClient: Read Me.txt</a>
+</p>
+<h3>kextとの通信</h3>
+<p class="Pcenter">
+アプリケーションやデーモンがカーネル空間のkextドライバと通信する場合にはIOKit.framework内のIOKitLib.hファイルで定義された関数を利用します。逆にkextドライバからはKernel.frameworkのIOKit内にあるIOUserClient.h関数を利用してユーザ空間と通信します。関数は32bit版と64bit版があります。64bit版はMac OS X 10.5以降で利用できます。
+</p>
+<p class="Pcenter">
+以下の資料にその概要が書かれていますが、 詳細はそれぞれのヘッダ ファイルを参照ください。
+</p>
+<p class="Pcenter">
+<a href="https://developer.apple.com/library/mac/samplecode/SimpleUserClient/Listings/User_Client_Info_txt.html">SimpleUserClient: User Client Info.txt</a>
+</p>
+<h3>I/O Registry</h3>
+<p class="Pcenter">
+I/O RegistryはI/O Kitがハードウェアを管理するためのデータベースで、カーネル空間からもユーザ空間からも読み書きできます。
+</p>
+<p class="Pcenter">
+kextドライバからI/O Registryにデータを登録し、ユーザ空間にあるアプリケーションなどからその内容を読む、あるいはその逆にアプリケーションなどからI/O Registryにデータを登録し、kextドライバから読むことで通信できます。
+</p>
+<p class="Pcenter">
+簡単にI/O Registryに登録されたデータをブラウズすするにはIORegistryExplorer.appというブラウザがあります。周辺装置などが接続されるとこのI/O Registryデータベースが更新され、その内容を元にkextドライバやデーモンなどが呼び出されます。また、前述のようにI/O Registryはカーネル空間からもユーザ空間からも扱うことができるため、カーネルとアプリケーション間の通信に使用することも可能です。
+</p>
+<p class="Pcenter">
+I/O Kitに関する情報は以下のURLから調べ始めると良いでしょう。
+</p>
+<p class="Pcenter">
+<a href="https://developer.apple.com/library/mac/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/Introduction/Introduction.html">Introduction to I/O Kit Fundamentals</a>
+</p>
+<h2><a name="device_driver_structure">デバイスドライバの構造</a></h2>
+<p class="Pcenter">
+Mac OS Xのkextドライバはアプリケーションと同様にバンドルになっています。バンドルは特定のファイルとディレクトリ構成を持ったディレクトリですが、Mac OS Xのファイル ブラウザであるFinderからは、一つのファイルとして扱われます。Finderでバンドルの中を見るにはマウスの副クリックで表示されたコンテクストメニューから[パッケージの内容を表示]を選択します。
+</p>
+<div class="photo_style" style="width:226px">
+	<div>
+			<img height="148" width="226" alt="Family" src="images/fig2structure.png">
+	</div>
+	<p>
+		Fig 1. カーネルとIOKit
+	</p>
+</div>
+<p class="Pcenter">
+バンドルの中では、二つのファイルが重要です。一つはOSがデバイス ドライバを認識し管理するためのInfo.plistファイル、もう一つはターゲットとなる装置やアプリケーションとデータをやり取りするためのドライバ本体（Fig. 2の例ではmDriver）です。
+</p>
+<p class="Pcenter">
+前者のInfo.plistファイルによって、OSからデバイス ドライバとして認識され、周辺機器が接続されたときなどに呼び出してもらうための情報をOSに提供します。Info.plistファイルの書式はXMLで、情報の中身はkextドライバに共通のタグの他に、USBやFireWire、PCIなど装置が使用するバス形式や、提供するサービスなどによってタグがあります。
+</p>
+<p class="Pcenter">
+後者のドライバ本体は「Darwinカーネル: kextとの通信」で解説した関数群などを利用して起動時や外部装置の接続時などに呼び出され初期化などを行います。各関数は適時に、呼び出されてハードウェア、カーネル空間やアプリケーション空間にあるソフトウェアと通信を行います。これらの関数はUSBやPCIなどのバス規格や StorageやHID (Human Interface Device)などの利用形態などに応じてClassごとにまとめられFamilyと呼ばれます。Familyには、IOUSBFamilyやIOPCIFamily、OHIDFamily、IOStorageFamilyなどがあります。
+</p>
+<p class="Pcenter">
+なお、Fig. 2 Bundleの例には各国の言語に合わせるためのInfoPlist.stringsファイルが含まれていますが、空のファイルです。</p>
+</div>
+</div>
+<div id="footer">
+<p>
+<a href="section2.html">次ページ</a>
+</p>
+<p>
+<span>ページ：</span>
+<b>1</b><span>&nbsp;/</span>
+<a href="section2.html">2</a><span>&nbsp;/</span>
+<a href="section3.html">3</a><span>&nbsp;/</span>
+<a href="section4.html">4</a><span>&nbsp;/</span>
+</p>
+</div>
+</body>
+</html>
