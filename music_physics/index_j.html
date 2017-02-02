@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8" />
+	<title>Music Physics</title>
+<!--
+Created:	2017/02/01
+By:			motohiko
+-->
+	<script type="text/javascript">
+window.onload = function() {
+	window.AudioContext = window.AudioContext || window.webkitAudioContext;
+	var noteName = ["A1", "A2", "A3", "A4", "A5", "A6"];
+	var phynotes = [55, 110, 220, 440, 880, 1760];
+	var normalnotes = [54.65451606, 109.5388711, 219.5383868, 440, 881.8503351, 1767.409121];
+	var normalcents = [-10.9, -7.3, -3.6, 0, +3.6, +7.3];
+	var keys = document.getElementById("keybord1");
+	try{
+		context = new AudioContext();	// Global variable
+	} catch(e) {
+		alert('oh no!\n You can not use this browser. \n This alert will show a few times ');
+	}
+
+	for (i = 0 ; i < noteName.length ; i++) {
+		var key = keys.appendChild(document.createElement("div"));
+		key.setAttribute("class", "buttonShap");
+		key.innerHTML = noteName[i];
+		playNote(key, phynotes[i]);
+	}
+	var keys = document.getElementById("keybord2");
+	for (i = 0 ; i < noteName.length ; i++) {
+		var key = keys.appendChild(document.createElement("div"));
+		key.setAttribute("class", "buttonShap");
+		key.innerHTML = noteName[i];
+		playNote(key, normalnotes[i], normalcents[i]);
+	}
+}
+
+function outText(key, textIn, cents) {
+	if ("keybord1" == key.parentNode.id) {
+		document.getElementById("textout_one").innerText = "周波数は " + textIn + "Hz.";
+	} else {
+		if (cents == 0) {
+			document.getElementById("textout_two").innerText = "周波数は " + textIn + "Hz. 同じ周波数";
+		} else {
+			document.getElementById("textout_two").innerText = "周波数は " + textIn + "Hz. 違いは約 " + cents + "cents";
+		}
+	}
+}
+
+
+function playNote(key, note, cents) {
+	var touches = ('ontouchstart' in window);
+	var EVENT_START = touches ? 'touchstart' : 'mousedown';
+	var EVENT_END = touches ? 'touchend' : 'mouseup';
+	var EVENT_OUT = touches ? 'touchleave' : 'mouseout';
+	var oscillator;
+	key.addEventListener(EVENT_START, function() {
+		oscillator = context.createOscillator();
+		oscillator.connect(context.destination);
+		oscillator.type = 'sawtooth';
+		oscillator.frequency.value = note; // value in hertz
+		outText(key, oscillator.frequency.value, cents);
+		oscillator.start();
+	}, false);
+	key.addEventListener(EVENT_END, function() {
+		oscillator.stop(0);
+	}, false);
+	key.addEventListener(EVENT_OUT, function() {
+		oscillator.stop(0);
+	}, false);
+}
+
+	</script>
+	<link rel="stylesheet" type="text/css" href="./css/main.css">
+	<style type="text/css">
+	</style>
+</head>
+<body>
+<div id="top_bar">dog doni<a href="./pitch_j.html">音高</a></div>
+<div>
+<h1>音楽と物理学</h1>
+<p>
+Harry Ferdinand Olson著 "Music, Physics and Engineering" という1967年（日本語版「音楽工学」H F オルソン 1969年）発行の本があります。古い本ですが、物理学や工学から見た音楽を解説しています。しかし、悲しいかな紙媒体では具体的な実例を示すことができません（笑）現在では、制限はあるもののHTML5のWeb Audio API 開発により比較的容易に実験できるようになりました。以下に、その実験の一端をご紹介します。
+</p>
+</div>
+
+<div>
+<p>
+まずは以下の鍵盤風ボタンを左から順に押して、出てくるオクターブ毎の音程をお聞きください。図の上にあるFrequencyには出ている音の周波数などが表示されています。
+</p>
+<div id="keybord1" class="keybord">
+<p>
+<b>keybord one</b>: <span id="textout_one">Frequency</span>
+</p>
+</div> 
+<p>
+次に以下のボタンを左から順に押してみてください。
+</p>
+<div id="keybord2" class="keybord">
+<p>
+<b>keybord two</b>: <span id="textout_two">Frequency</span>
+</p>
+</div>
+<p>
+右から順に押しても同じですが、違和感があると思います。音楽が仕事や趣味の人はもちろん、多くの人は下側のボタンが正しいオクターブだと感じられると思います。しかし、表示されている周波数をご覧頂ければおわかりのように、一般向けに説明されているオクターブが上がると周波数は二倍になるという話しには沿っていません。人間の感覚は単純な物理則ではないことがおわかり頂けると思います。このように一般向け解説と実際の人間の感覚が異なる事がいくつかあります。この様な違いは私が卒業論文を書いた1970年代にはすでに知られていました。
+</p>
+<p>
+次のページでは人が感じる音の高さの実験です。
+</p>
+<p><a href="./pitch_j.html">次ぎへ</a></p>
+</div>
+<div id="top_bar">dog doni<a href="./pitch_j.html">音高</a></div>
+</body>
+</html>

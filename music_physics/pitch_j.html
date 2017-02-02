@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8" />
+	<title>radio buttons</title>
+<!--
+Created:	2017/01/14
+By:			motohiko
+-->
+	<script type="text/javascript">
+window.onload = function() {
+	window.AudioContext = window.AudioContext || window.webkitAudioContext;
+	button_base_condition = false;
+	button_dif_condition = false;
+	button_ref_condition = false;
+	key_dif_num = 50;
+	key_base_note = 440;
+	key_dif_note = key_base_note + key_dif_num;
+	dif_frequency = document.getElementById("dif_freq");
+	dif_frequency.value = key_dif_note;
+	key_base = document.getElementById("sound_base");
+	key_dif = document.getElementById("sound_dif");
+	key_ref = document.getElementById("sound_ref");
+	oscillator_base = 0;
+	oscillator_dif = 0;
+	oscillator_ref = 0;
+	try{
+		context_base = new AudioContext();
+		context_dif = new AudioContext();
+		context_ref = new AudioContext();
+	} catch(e) {
+		alert('oh no!\n You can not use this browser. \n This alert will show a few times ');
+	}
+}
+
+function button_ref_change (freq) {
+	if (freq == 50) {
+		var note = freq;
+	} else {
+		var note = key_dif_num;
+	}
+	if (!button_ref_condition) {
+		button_ref_condition = true;
+		oscillator_ref = context_ref.createOscillator();
+		oscillator_ref.connect(context_ref.destination);
+		oscillator_ref.type = 'triangle';		// sawtooth, triangle, sine
+		oscillator_ref.frequency.value = note;
+		oscillator_ref.start();
+	} else {
+		oscillator_ref.stop(0);
+		button_ref_condition = false;
+	}
+}
+
+function button_base_change () {
+	if (!button_base_condition) {
+		key_base.innerHTML = "Base ON";
+		button_base_condition = true;
+		oscillator_base = context_base.createOscillator();
+		oscillator_base.connect(context_base.destination);
+		oscillator_base.type = 'sine';		// sawtooth
+		oscillator_base.frequency.value = key_base_note;
+		oscillator_base.start();
+	} else {
+		oscillator_base.stop(0);
+		key_base.innerHTML = "Base OFF";
+		button_base_condition = false;
+	}
+}
+
+function button_dif_change (freq) {
+	if (freq == 490) {
+		var note = freq;
+	} else {
+		var note = key_dif_note;
+	}
+	if (!button_dif_condition) {
+		key_dif.innerHTML = "Diff ON";
+		button_dif_condition = true;
+		oscillator_dif = context_dif.createOscillator();
+		oscillator_dif.connect(context_dif.destination);
+		oscillator_dif.type = 'sine';
+		oscillator_dif.frequency.value = note;
+		oscillator_dif.start();
+	} else {
+		oscillator_dif.stop(0);
+		key_dif.innerHTML = "Diff OFF";
+		button_dif_condition = false;
+	}
+}
+
+function up_frequency() {
+	key_dif_num = key_dif_num + 1;
+	key_dif_note = key_base_note + key_dif_num;
+	document.getElementById("dif_freq").innerText = key_dif_note;
+	document.getElementById("key_dif_num").innerText = key_dif_num;
+}
+function down_frequency() {
+	key_dif_num = key_dif_num - 1;
+	key_dif_note = key_base_note + key_dif_num;
+	document.getElementById("dif_freq").innerText = key_dif_note;
+	document.getElementById("key_dif_num").innerText = key_dif_num;
+}
+	</script>
+	<link rel="stylesheet" type="text/css" href="./css/main.css">
+	<style type="text/css">
+button.pitch_test {
+	width: 100px;
+}
+button#up_frequency, #down_frequency {
+	font: normal bold 10pt sans-serig;
+	width: 30px;
+}
+input#dif_freq {
+	font: 10pt sans-serig;
+	width: 30px;
+}
+	</style>
+</head>
+<body>
+<div id="top_bar">dog doni<a href="./index_j.html">音程</a></div>
+<h1>音の高さ</h1>
+<div>
+<p>
+下の二つのボタンは押すと音が出て、もう一度押すと止まります。それぞれのボタンを押して二つの音の高さを聞いてください。
+</p>
+<p>
+<button id="sound_base" onclick="button_base_change()" class="pitch_test">440Hz Sound</button>
+<button id="sound_dif" onclick="button_dif_change(490)" class="pitch_test">490Hz Sound</button>
+</p>
+<p>
+次ぎに両方のボタンをONにして、二つの音が同時になる音の高さを聞いてみてください。
+</p>
+<p>
+多くの人には、低い音が聞こえて来たのではないかと思います。その音の高さ（低さ）はこの<button id="sound_ref" onclick="button_ref_change(50)">ボタン</button>を押して出てくる音の高さぐらいではなかったでしょうか？
+</p>
+<p>
+一般的には音の高さは音の周波数だと説明されています。しかし、お聞き頂いたように、多くの人は音叉のような単純な音を二つ鳴らすと別の音の高さを感じます。上記の例では周波数が440Hzと490Hzの音を鳴らすと50Hzの音が感じられます。
+</p>
+<p>
+もう少し詳しい説明では、楽器など複雑な音では高調波と呼ばれるたくさんの単純な音に分解できて、高調波の一部である基音の周波数が音の高さだと説明されています。しかし、たくさんある高調波の隣同士の周波数を差し引いた数を音の高さと人は感じているようです。今回の例では440Hzと490Hzの音が隣同士の高調波で、その周波数の差の50Hzが人が感じる音の高さです。
+</p>
+<p>
+たとえば、昔の小さなAMラジオでもベースギターやピアノの低音が聞こえて来るように感じるのは、この考え方であれば説明できそうです。
+</p>
+<p>
+もちろん、先のページにもあるように人が感じる音の高さは、一つだけでは決まりません。しかし、高調波の差は人の音に対する感覚の大切な部分を占めているらしいことがおわかり頂けると思います。
+</p>
+</div>
+<div>
+<p>
+もう少し試したい方は、下にあるボタンで実際に音の周波数の差をご自分で変えてみてください。[440Hz Sound]ボタンを基準として、[Diff Sound]ボタンで出てくる音の周波数を[ + ]ボタンと[ - ]ボタンで変えて、それぞれの音の高さと二つを同時にならしたときの音の高さを比べてみてください。さらに、[Ref Sound]ボタンで差の音と聞き比べてみてください。
+</p>
+<p>
+<button id="sound_base" onclick="button_base_change()" class="pitch_test">440Hz Sound</button><br>
+<button id="sound_dif" onclick="button_dif_change()" class="pitch_test">Diff Sound</button>
+<button id="up_frequency" onclick="up_frequency()"> + </button>
+<span id="dif_freq">490</span>
+<button id="down_frequency" onclick="down_frequency()"> - </button><br>
+<button id="sound_ref" onclick="button_ref_change()" class="pitch_test">Ref Sound</button>
+<span id="key_dif_num">50</span>
+</p>
+</div>
+<div id="top_bar">dog doni<a href="./index_j.html">音程</a></div>
+</body>
+</html>

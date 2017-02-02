@@ -1,0 +1,58 @@
+body{
+	font: 12pt serif;
+	min-width:500px; 
+	max-width:800px;
+}
+div {
+	margin: 0px 20px;
+}
+p {
+	margin: 10px 20px;
+}
+h1 {
+	font: 24pt sans-serif;
+	margin: 0px;
+}
+.math_equ {
+	font: 12pt sans-serif;
+}
+sup {
+}
+sub {
+}
+i {
+	font: italic 12pt cursive;
+}
+
+/* bars */
+div#top_bar {
+	margin: 0px 0px 20px 0px;
+	padding: 10px;
+	font: 10pt sans-serif;
+	color: #fff;
+	background-color: #000040;
+}
+div#top_bar a:link { color: #fff; }
+div#top_bar a:visited { color: #fff; }
+div#top_bar a:active { color: #fff; }
+div#top_bar a{text-decoration: none;}
+div#top_bar a{margin: 0px 40px;}
+
+/* keybords */
+div#keybord1 {
+	margin: 30px;
+  overflow:hidden;
+}
+div#keybord2 {
+	margin: 30px;
+  overflow:hidden;
+}
+div.buttonShap {
+	float: left;
+	cursor: pointer;
+	display: block;
+	margin: 0px;
+	border: 1px solid #000;
+	width: 50px;
+	height: 200px;
+}
