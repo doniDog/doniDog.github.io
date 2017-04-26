@@ -70,7 +70,7 @@ function button_base_change (button) {
 		oscillator_base.stop(0);
 		button_base_condition = false;
 		Array.prototype.forEach.call(key_bases, function(element, index, array) {
-			element.innerHTML = "440Hz Sound";
+			element.innerHTML = "440 Hz Sound";
 		});
 	}
 }
@@ -90,12 +90,12 @@ function button_dif_change (freq) {
 		oscillator_dif.frequency.value = note;
 		oscillator_dif.start();
 		Array.prototype.forEach.call(key_difs, function(element, index, array) {
-			element.innerHTML = note + "Hz Sound";
+			element.innerHTML = note + " Hz Sound";
 		});
 	} else {
 		oscillator_dif.stop(0);
 		button_dif_condition = false;
-		sound_dif1.innerText = "490Hz Sound";
+		sound_dif1.innerText = "490 Hz Sound";
 		sound_dif2.innerText = "Diff. Sound";
 	}
 }
@@ -130,44 +130,44 @@ input#dif_freq {
 </head>
 <body>
 <header>dog doni
-<nav><a href="./index_j.html">音程</a></nav>
+<nav><a href="./index.html">octave</a></nav>
 </header>
 <main id="content" role="main">
 <article>
-<h1>音の高さ</h1>
+<h1>pitch</h1>
 <div>
 <p>
-下の二つのボタンは押すと音が出て、もう一度押すと止まります。それぞれのボタンを押して二つの音の高さを聞いてください。
+If you push or tap the buttons on below, it will make a sound. If you push or tap the button again, the sound will be stopped. Try each buttons, and listen the pitch of both sound.
 </p>
 <p>
-<button onclick="button_base_change('sound_base1')" class="sound_base pitch_test">440Hz Sound</button>
-<button onclick="button_dif_change('sound_dif1')" id="sound_dif1" class="sound_dif pitch_test">490Hz Sound</button>
+<button onclick="button_base_change('sound_base1')" class="sound_base pitch_test">440 Hz Sound</button>
+<button onclick="button_dif_change('sound_dif1')" id="sound_dif1" class="sound_dif pitch_test">490 Hz Sound</button>
 </p>
 <p>
-次ぎに両方のボタンをONにして、二つの音が同時になる音の高さを聞いてみてください。
+Let's turn on both the first button and second button, and listen the pitch of the sound with care.
 </p>
 <p>
-多くの人には、低い音が聞こえて来たのではないかと思います。その音の高さ（低さ）はこの<button id="sound_ref1" onclick="button_ref_change(50)">ボタン</button>を押して出てくる音の高さぐらいではなかったでしょうか？
+You might hear different pitch sound, don't you? The sound might be a low sound that same as the sound of this <button id="sound_ref1" onclick="button_ref_change(50)">button</button>.
 </p>
 <p>
-一般的には音の高さは音の周波数だと説明されています。しかし、お聞き頂いたように、多くの人は音叉のような単純な音を二つ鳴らすと別の音の高さを感じます。上記の例では周波数が440Hzと490Hzの音を鳴らすと50Hzの音が感じられます。
+In general, it is explained that the pitch of the sound is the frequency of the sound. But, as you have heard, many people experience a different pitch when making two simple sounds like a tuning fork. The each frequency is 440 Hz and 490 Hz.The frequency of the low sound will be 50 Hz.
 </p>
 <p>
-もう少し詳しい説明では、楽器など複雑な音では高調波と呼ばれるたくさんの単純な音に分解できて、高調波の一部である基音の周波数が音の高さだと説明されています。しかし、たくさんある高調波の隣同士の周波数を差し引いた数を音の高さと人は感じているようです。今回の例では440Hzと490Hzの音が隣同士の高調波で、その周波数の差の50Hzが人が感じる音の高さです。
+Let me write a little bit more detail, it is explained that sounds such as instruments can be split down into many simple sounds called harmonics. And, the frequency of the fundamental tone, which is a part of harmonics, is the pitch of the sound. However, it seems that the human is feeling the pitch of the sound by the frequency that subtract of the frequencies of the harmonics next to each other. In this example, the sounds of 440 Hz and 490 Hz are adjacent harmonics, and the difference in frequency of 50 Hz is the pitch of the sound the human feels.
 </p>
 <p>
-たとえば、昔の小さなAMラジオでもベースギターやピアノの低音が聞こえて来るように感じるのは、この考え方であれば説明できそうです。
+For example, it appears to be possible to explain why you can hear the low sound like low keys of a piano and a bass guitar even in a small AM radio.
 </p>
 <p>
-もちろん、先のページにもあるように人が感じる音の高さは、一つだけでは決まりません。しかし、高調波の差は人の音に対する感覚の大切な部分を占めているらしいことがおわかり頂けると思います。
+Of course, as you can see on the previous page, the pitch of the sound the human feels cannot be decided by just one. However, the difference of harmonic frequencies seems to take an important part of the sense of human, I think.
 </p>
 </div>
 <div>
 <p>
-もう少し試したい方は、下にあるボタンで実際に音の周波数の差をご自分で変えてみてください。[440Hz Sound]ボタンを基準として、[Diff Sound]ボタンで出てくる音の周波数を[ + ]ボタンと[ - ]ボタンで変えて、それぞれの音の高さと二つを同時にならしたときの音の高さを比べてみてください。さらに、[Ref Sound]ボタンで差の音と聞き比べてみてください。
+Please try more, if you want. Change the frequency difference of the sound by yourself with the buttons below. [440 Hz Sound] button is the reference sound. [ + ] button and [ - ] button can change the frequency of the sound that comes with [Diff. Sound] button. Please compare the pitch of the sounds of each button and the pitch of the sound that you turn on both sound at the same time。Also, please compare with the pitch of the sound of  [Ref. Sound] button.
 </p>
 <p>
-<button onclick="button_base_change('sound_base2')" class="sound_base pitch_test">440Hz Sound</button><br>
+<button onclick="button_base_change('sound_base2')" class="sound_base pitch_test">440 Hz Sound</button><br>
 <button onclick="button_dif_change('sound_dif2')" id="sound_dif2" class="sound_dif pitch_test">Diff. Sound</button>
 <button id="up_frequency" onclick="up_frequency()"> + </button>
 <span id="dif_freq">490</span>

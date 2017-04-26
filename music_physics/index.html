@@ -38,12 +38,12 @@ window.onload = function() {
 
 function outText(key, textIn, cents) {
 	if ("keybord1" == key.parentNode.id) {
-		document.getElementById("textout_one").innerText = "周波数は " + textIn + "Hz.";
+		document.getElementById("textout_one").innerText = "The frequency is " + textIn + "Hz.";
 	} else {
 		if (cents == 0) {
-			document.getElementById("textout_two").innerText = "周波数は " + textIn + "Hz. 同じ周波数";
+			document.getElementById("textout_two").innerText = "The frequency is " + textIn + "Hz. Same frequency ";
 		} else {
-			document.getElementById("textout_two").innerHTML = "周波数は " + textIn + "Hz. <br>違いは約 " + cents + " cents";
+			document.getElementById("textout_two").innerHTML = "The frequency is " + textIn + "Hz. <br>The difference is " + cents + " cents";
 		}
 	}
 }
@@ -101,20 +101,23 @@ div.buttonShap {
 </head>
 <body>
 <header>dog doni
-<nav><a href="./pitch_j.html">音の高さ</a><a href="./index.html">English</a></nav>
+<nav><a href="./pitch.html">pitch</a> <a href="./index_j.html">Japanese</a></nav>
 </header>
 <main id="content" role="main">
 <article>
-<h1>音楽と物理学</h1>
+<h1>Music and Physics</h1>
 <div>
 <p>
-Harry Ferdinand Olson著 "Music, Physics and Engineering" という1967年（日本語版「音楽工学」H F オルソン 1969年）発行の本があります。古い本ですが、物理学や工学から見た音楽を解説しています。しかし、悲しいかな紙媒体では具体的な実例を示すことができません（笑）現在では、制限はあるもののHTML5のWeb Audio API 開発により比較的容易に実験できるようになりました。以下に、その実験の一端をご紹介します。
+There is an old book that titled "Music, Physics and Engineering" published in 1967 by Harry Ferdinand Olson. It's a good book, but it can't show actual sample because it is just a paper. ;-)
+</p>
+<p> 
+Now, "Web Audio API" of "HTML5" is available, even if it has some restriction. We can try some experiments. The following is some of such samples.
 </p>
 </div>
 
 <div>
 <p>
-まずは以下の鍵盤風ボタンを左から順に押して、出てくるオクターブ毎の音程をお聞きください。図の上にあるFrequencyには出ている音の周波数などが表示されています。
+First of all, please type following buttons from right to left. The number on the above button shows the frequency of the sound. 
 </p>
 <div id="keybord1" class="keybord">
 <p>
@@ -122,7 +125,7 @@ Harry Ferdinand Olson著 "Music, Physics and Engineering" という1967年（日
 </p>
 </div> 
 <p>
-次に以下のボタンを左から順に押してみてください。
+Now, please type following buttons from right to left. 
 </p>
 <div id="keybord2" class="keybord">
 <p>
@@ -130,12 +133,18 @@ Harry Ferdinand Olson著 "Music, Physics and Engineering" という1967年（日
 </p>
 </div>
 <p>
-右から順に押しても同じですが、違和感があると思います。音楽が仕事や趣味の人はもちろん、多くの人は下側のボタンが正しいオクターブだと感じられると思います。しかし、表示されている周波数をご覧頂ければおわかりのように、一般向けに説明されているオクターブが上がると周波数は二倍になるという話しには沿っていません。人間の感覚は単純な物理則ではないことがおわかり頂けると思います。このように一般向け解説と実際の人間の感覚が異なる事がいくつかあります。この様な違いは私が卒業論文を書いた1970年代にはすでに知られていました。
+People who familiar with European style music institutions may feel strange with the first buttons, but feel normal with the second one.Of course, it's a same, even if you play from left to right.
 </p>
 <p>
-次のページでは人が感じる音の高さの実験です。
+Some of you might head following idea. <br>
+If there are two notes, and one note is one octave higher than the other note. The frequency of the one note is two times of the frequency of the others. But, many of you feel different. Please try above buttons again, and see each frequency.
 </p>
-<p><a href="./pitch_j.html">次ぎへ</a></p>
+<p>
+As you can see or hear, the sense of human is different from a simple physics. The differences like this were already recognized in the 1970s, when I wrote my graduation thesis.
+</p>
+<p>
+Let's see about the pitch on the <a href="./pitch.html">Next</a> page.
+</p>
 </div>
 </article>
 </main>
