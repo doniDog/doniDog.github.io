@@ -41,7 +41,7 @@ function outText(key, textIn, cents) {
 		document.getElementById("textout_one").innerText = "周波数は " + textIn + "Hz.";
 	} else {
 		if (cents == 0) {
-			document.getElementById("textout_two").innerText = "周波数は " + textIn + "Hz. 同じ周波数";
+			document.getElementById("textout_two").innerHTML = "周波数は " + textIn + "Hz. <br>同じ周波数";
 		} else {
 			document.getElementById("textout_two").innerHTML = "周波数は " + textIn + "Hz. <br>違いは約 " + cents + " cents";
 		}

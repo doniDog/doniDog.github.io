@@ -60,7 +60,7 @@ header {
     width: 100%;
 	background-color: slategray;
 	padding: 0 0 20px 1px;
-	font: medium sans-serif ;
+	font: 24pt sans-serif ;
 	color: white;
 }
 nav {
@@ -68,7 +68,7 @@ nav {
 	float:right;
 	padding: 0 0 20px 0;
 	width: 270px;
-	font: medium sans-serif ;
+	font: 10pt sans-serif ;
 	color: white;
 }
 nav a:link { color: white; }
@@ -94,7 +94,7 @@ footer {
     height: 30px;
     width: 100%;
 	background-color: slategray;
-	font: small sans-serif ;
+	font: 9pt sans-serif ;
 	color: white;
 	text-align: right;
 }

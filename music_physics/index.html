@@ -41,7 +41,7 @@ function outText(key, textIn, cents) {
 		document.getElementById("textout_one").innerText = "The frequency is " + textIn + "Hz.";
 	} else {
 		if (cents == 0) {
-			document.getElementById("textout_two").innerText = "The frequency is " + textIn + "Hz. Same frequency ";
+			document.getElementById("textout_two").innerHTML = "The frequency is " + textIn + "Hz. <br>Same frequency ";
 		} else {
 			document.getElementById("textout_two").innerHTML = "The frequency is " + textIn + "Hz. <br>The difference is " + cents + " cents";
 		}
