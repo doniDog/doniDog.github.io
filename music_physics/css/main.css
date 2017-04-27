@@ -113,6 +113,8 @@ h1 {
 	font: 12pt sans-serif;
 }
 sup {
+	font-size: small;
+	vertical-align: top;
 }
 sub {
 }
